@@ -1,17 +1,34 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Menu, X, Globe } from "lucide-react";
+import { BookOpen, Menu, X, Globe, LogOut, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
-
-const navLinks = [
-  { label: "Courses", href: "/courses" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
-];
+import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { languageNames, Language } from "@/i18n/translations";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, profile, signOut } = useAuth();
+  const { t, language, setLanguage } = useLanguage();
+
+  const navLinks = [
+    { label: t("nav_courses"), href: "/courses" },
+    { label: t("nav_pricing"), href: "/pricing" },
+    { label: t("nav_about"), href: "/about" },
+  ];
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 glass">
@@ -36,19 +53,72 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          {user && (
+            <Link
+              to="/dashboard"
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                location.pathname === "/dashboard"
+                  ? "text-accent bg-accent/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {t("nav_dashboard")}
+            </Link>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md">
-            <Globe className="h-4 w-4" />
-            EN
-          </button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">Log in</Link>
-          </Button>
-          <Button variant="accent" size="sm" asChild>
-            <Link to="/register">Sign Up</Link>
-          </Button>
+          {/* Language Switcher */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md">
+                <Globe className="h-4 w-4" />
+                {language.toUpperCase()}
+                <ChevronDown className="h-3 w-3" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {(Object.keys(languageNames) as Language[]).map((lang) => (
+                <DropdownMenuItem
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={language === lang ? "bg-accent/10 text-accent" : ""}
+                >
+                  {languageNames[lang]}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-accent transition-colors px-3 py-1.5 rounded-lg hover:bg-muted">
+                  <User className="h-4 w-4" />
+                  {profile?.display_name || user.email?.split("@")[0]}
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                  {t("nav_dashboard")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t("nav_logout")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">{t("nav_login")}</Link>
+              </Button>
+              <Button variant="accent" size="sm" asChild>
+                <Link to="/register">{t("nav_signup")}</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -79,13 +149,53 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            {user && (
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                  location.pathname === "/dashboard"
+                    ? "text-accent bg-accent/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {t("nav_dashboard")}
+              </Link>
+            )}
+
+            {/* Mobile language switcher */}
+            <div className="px-4 py-2 flex flex-wrap gap-2">
+              {(Object.keys(languageNames) as Language[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+                    language === lang
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {lang.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
             <div className="flex gap-2 mt-3 pt-3 border-t border-border">
-              <Button variant="ghost" size="sm" className="flex-1" asChild>
-                <Link to="/login" onClick={() => setMobileOpen(false)}>Log in</Link>
-              </Button>
-              <Button variant="accent" size="sm" className="flex-1" asChild>
-                <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
-              </Button>
+              {user ? (
+                <Button variant="ghost" size="sm" className="flex-1" onClick={() => { handleLogout(); setMobileOpen(false); }}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t("nav_logout")}
+                </Button>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" className="flex-1" asChild>
+                    <Link to="/login" onClick={() => setMobileOpen(false)}>{t("nav_login")}</Link>
+                  </Button>
+                  <Button variant="accent" size="sm" className="flex-1" asChild>
+                    <Link to="/register" onClick={() => setMobileOpen(false)}>{t("nav_signup")}</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>
