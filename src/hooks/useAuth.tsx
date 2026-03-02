@@ -5,6 +5,7 @@ import type { User, Session } from "@supabase/supabase-js";
 interface Profile {
   display_name: string | null;
   avatar_url: string | null;
+  trial_start_date: string | null;
 }
 
 interface AuthContextType {
@@ -12,12 +13,22 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
+  trialDaysRemaining: number | null;
   signUp: (email: string, password: string, displayName: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const calcTrialDays = (trialStart: string | null): number | null => {
+  if (!trialStart) return null;
+  const start = new Date(trialStart);
+  const end = new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  const remaining = Math.ceil((end.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+  return Math.max(0, remaining);
+};
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,11 +39,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, trial_start_date")
       .eq("user_id", userId)
       .single();
     setProfile(data);
   };
+
+  const trialDaysRemaining = calcTrialDays(profile?.trial_start_date ?? null);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -76,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, loading, trialDaysRemaining, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
