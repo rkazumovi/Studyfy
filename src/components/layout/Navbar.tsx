@@ -1,9 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Menu, X, Globe, LogOut, User, ChevronDown } from "lucide-react";
+import { BookOpen, Menu, X, Globe, LogOut, User, ChevronDown, Sun, Moon, Monitor } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useTheme } from "@/hooks/useTheme";
 import { languageNames, Language } from "@/i18n/translations";
 import {
   DropdownMenu,
@@ -12,15 +13,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const ThemeIcon = ({ theme }: { theme: string }) => {
+  if (theme === "dark") return <Moon className="h-4 w-4" />;
+  if (theme === "system") return <Monitor className="h-4 w-4" />;
+  return <Sun className="h-4 w-4" />;
+};
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  const { theme, setTheme } = useTheme();
 
   const navLinks = [
     { label: t("nav_courses"), href: "/courses" },
+    { label: t("nav_subjects"), href: "/subjects" },
     { label: t("nav_pricing"), href: "/pricing" },
     { label: t("nav_about"), href: "/about" },
   ];
@@ -67,7 +76,27 @@ const Navbar = () => {
           )}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
+          {/* Theme toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <ThemeIcon theme={theme} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")} className={theme === "light" ? "bg-accent/10 text-accent" : ""}>
+                <Sun className="h-4 w-4 mr-2" /> {t("theme_light")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")} className={theme === "dark" ? "bg-accent/10 text-accent" : ""}>
+                <Moon className="h-4 w-4 mr-2" /> {t("theme_dark")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")} className={theme === "system" ? "bg-accent/10 text-accent" : ""}>
+                <Monitor className="h-4 w-4 mr-2" /> {t("theme_system")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -122,13 +151,21 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button
-          className="md:hidden p-2 text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            className="p-2 text-muted-foreground hover:text-foreground"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <ThemeIcon theme={theme} />
+          </button>
+          <button
+            className="p-2 text-foreground"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}

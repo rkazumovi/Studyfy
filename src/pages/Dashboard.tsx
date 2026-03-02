@@ -1,12 +1,12 @@
 import Layout from "@/components/layout/Layout";
-import { BookOpen, Clock, Award, TrendingUp } from "lucide-react";
+import { BookOpen, Clock, Award, TrendingUp, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, trialDaysRemaining } = useAuth();
   const { t } = useLanguage();
 
   const displayName = profile?.display_name || user?.email?.split("@")[0] || "";
@@ -24,7 +24,20 @@ const Dashboard = () => {
         <h1 className="text-2xl md:text-3xl font-display font-bold mb-1">
           {t("dash_welcome")}, {displayName}!
         </h1>
-        <p className="text-muted-foreground mb-8">{t("dash_subtitle")}</p>
+        <p className="text-muted-foreground mb-6">{t("dash_subtitle")}</p>
+
+        {/* Trial banner */}
+        {trialDaysRemaining !== null && trialDaysRemaining > 0 && (
+          <div className="mb-6 flex items-center gap-3 rounded-xl border border-accent/30 bg-accent/5 p-4">
+            <Sparkles className="h-5 w-5 text-accent shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-foreground">{t("dash_trial_active")}</p>
+              <p className="text-xs text-muted-foreground">
+                {trialDaysRemaining} {t("dash_trial_days")}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {dashboardCards.map(({ icon: Icon, label, value, color }) => (

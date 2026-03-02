@@ -4,8 +4,13 @@ import Layout from "@/components/layout/Layout";
 import SectionContainer from "@/components/shared/SectionContainer";
 import CourseCard from "@/components/shared/CourseCard";
 import { sampleCourses } from "@/data/courses";
-import { ArrowRight, BookOpen, Users, Award, Zap } from "lucide-react";
+import { subjects } from "@/data/subjects";
+import { ArrowRight, BookOpen, Users, Award, Zap, Calculator, Atom, Code2, Cog, BarChart3, Telescope, FlaskConical, Cpu } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+const iconMap: Record<string, React.FC<{ className?: string }>> = {
+  Calculator, Atom, Code2, Cog, BarChart3, Telescope, FlaskConical, Cpu,
+};
 
 const Index = () => {
   const { t } = useLanguage();
@@ -15,15 +20,6 @@ const Index = () => {
     { icon: Users, value: "120K+", label: t("stat_students") },
     { icon: Award, value: "95%", label: t("stat_completion") },
     { icon: Zap, value: "50+", label: t("stat_instructors") },
-  ];
-
-  const subjects = [
-    { name: t("subject_math"), count: 120, emoji: "📐" },
-    { name: t("subject_physics"), count: 85, emoji: "⚛️" },
-    { name: t("subject_programming"), count: 150, emoji: "💻" },
-    { name: t("subject_engineering"), count: 70, emoji: "⚙️" },
-    { name: t("subject_data_science"), count: 90, emoji: "📊" },
-    { name: t("subject_technology"), count: 65, emoji: "🔬" },
   ];
 
   return (
@@ -92,20 +88,30 @@ const Index = () => {
           <h2 className="text-2xl md:text-3xl font-display font-bold">{t("browse_subject")}</h2>
           <p className="mt-2 text-muted-foreground">{t("browse_subject_subtitle")}</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {subjects.map((s) => (
-            <Link
-              key={s.name}
-              to="/courses"
-              className="flex items-center gap-4 p-5 rounded-xl bg-card border border-border shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300"
-            >
-              <span className="text-3xl">{s.emoji}</span>
-              <div>
-                <h3 className="font-display font-semibold text-card-foreground">{s.name}</h3>
-                <p className="text-sm text-muted-foreground">{s.count} {t("courses_count")}</p>
-              </div>
-            </Link>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {subjects.map((s) => {
+            const Icon = iconMap[s.icon];
+            return (
+              <Link
+                key={s.id}
+                to={`/courses?subject=${encodeURIComponent(s.slug)}`}
+                className="group flex flex-col items-center gap-3 p-5 rounded-xl bg-card border border-border shadow-card hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300 text-center"
+              >
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  {Icon && <Icon className="h-6 w-6 text-accent" />}
+                </div>
+                <div>
+                  <h3 className="font-display font-semibold text-sm text-card-foreground">{t(s.translationKey)}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{s.courseCount} {t("courses_count")}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="text-center mt-6">
+          <Button variant="ghost" asChild>
+            <Link to="/subjects">{t("view_all")} <ArrowRight className="h-4 w-4" /></Link>
+          </Button>
         </div>
       </SectionContainer>
 
