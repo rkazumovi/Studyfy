@@ -11,10 +11,12 @@ import AIChatbot from "@/components/chat/AIChatbot";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import Learn from "./pages/Learn";
 import Subjects from "./pages/Subjects";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
+import InstructorDashboard from "./pages/InstructorDashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
@@ -34,10 +36,12 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/courses/:id" element={<CourseDetail />} />
+                <Route path="/learn/:id" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
                 <Route path="/subjects" element={<Subjects />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/instructor" element={<ProtectedRoute><InstructorDashboard /></ProtectedRoute>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="*" element={<NotFound />} />
