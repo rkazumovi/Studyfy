@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import SectionContainer from "@/components/shared/SectionContainer";
 import CourseCard from "@/components/shared/CourseCard";
-import { sampleCourses } from "@/data/courses";
 import { subjects } from "@/data/subjects";
 import { ArrowRight, BookOpen, Users, Award, Zap, Calculator, Atom, Code2, Cog, BarChart3, Telescope, FlaskConical, Cpu } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useCourses } from "@/hooks/useCourses";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
   Calculator, Atom, Code2, Cog, BarChart3, Telescope, FlaskConical, Cpu,
@@ -14,6 +15,7 @@ const iconMap: Record<string, React.FC<{ className?: string }>> = {
 
 const Index = () => {
   const { t } = useLanguage();
+  const { data: courses, isLoading } = useCourses();
 
   const stats = [
     { icon: BookOpen, value: "500+", label: t("stat_courses") },
@@ -21,6 +23,8 @@ const Index = () => {
     { icon: Award, value: "95%", label: t("stat_completion") },
     { icon: Zap, value: "50+", label: t("stat_instructors") },
   ];
+
+  const topCourses = courses?.slice(0, 3) ?? [];
 
   return (
     <Layout>
@@ -75,11 +79,38 @@ const Index = () => {
             <Link to="/courses">{t("view_all")} <ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sampleCourses.slice(0, 3).map((course) => (
-            <CourseCard key={course.id} {...course} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="rounded-xl border border-border bg-card overflow-hidden">
+                <Skeleton className="aspect-video w-full" />
+                <div className="p-5 space-y-3">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topCourses.map((course) => (
+              <CourseCard
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                subject={course.subject}
+                level={course.level as "Beginner" | "Intermediate" | "Advanced"}
+                duration={course.duration ?? ""}
+                students={course.students_count}
+                rating={Number(course.rating)}
+                image={course.thumbnail ?? ""}
+                price={course.enrollment_type === "free" ? "Free" : `$${Number(course.price).toFixed(2)}`}
+                enrollmentType={course.enrollment_type}
+              />
+            ))}
+          </div>
+        )}
       </SectionContainer>
 
       {/* Subjects */}

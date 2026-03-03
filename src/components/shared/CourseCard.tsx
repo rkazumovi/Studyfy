@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Clock, Users, Star } from "lucide-react";
+import { Clock, Users, Star, Crown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export interface CourseCardProps {
@@ -12,6 +12,7 @@ export interface CourseCardProps {
   rating: number;
   image: string;
   price: string;
+  enrollmentType?: string;
 }
 
 const levelColors: Record<string, string> = {
@@ -20,18 +21,35 @@ const levelColors: Record<string, string> = {
   Advanced: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
-const CourseCard = ({ id, title, subject, level, duration, students, rating, image, price }: CourseCardProps) => (
+const CourseCard = ({ id, title, subject, level, duration, students, rating, image, price, enrollmentType }: CourseCardProps) => (
   <Link
     to={`/courses/${id}`}
     className="group block rounded-xl border border-border bg-card overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 hover:-translate-y-1"
   >
-    <div className="aspect-video bg-muted overflow-hidden">
+    <div className="aspect-video bg-muted overflow-hidden relative">
       <img
         src={image}
         alt={title}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
       />
+      {enrollmentType === "paid" && (
+        <div className="absolute top-2 right-2">
+          <Badge className="bg-accent/90 text-accent-foreground text-[10px] gap-1">
+            <Crown className="h-3 w-3" /> Premium
+          </Badge>
+        </div>
+      )}
+      {enrollmentType === "free" && (
+        <div className="absolute top-2 right-2">
+          <Badge className="bg-studyfy-success/90 text-accent-foreground text-[10px]">Free</Badge>
+        </div>
+      )}
+      {enrollmentType === "trial" && (
+        <div className="absolute top-2 right-2">
+          <Badge className="bg-studyfy-warning/90 text-accent-foreground text-[10px]">Trial</Badge>
+        </div>
+      )}
     </div>
     <div className="p-5">
       <div className="flex items-center gap-2 mb-2">
