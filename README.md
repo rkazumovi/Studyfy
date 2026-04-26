@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+📚 Studyfy
 
-## Project info
+Studyfy is a modern, production-ready eCommerce learning platform designed for structured education in mathematics, physics, programming, engineering, science, and technology.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+It provides a clean, scalable foundation for a real-world online learning system inspired by platforms like Coursera and Brilliant.org.
 
-## How can I edit this code?
+🔗 Live Demo: https://studyfy-app.lovable.app/
 
-There are several ways of editing your application.
+Built using Lovable
 
-**Use Lovable**
+✨ Project Overview
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Studyfy was built in two development phases:
 
-Changes made via Lovable will be committed automatically to this repo.
+🚀 Phase 1 - Core Platform Setup
+Full application skeleton created
+Modern design system implemented
+8-page architecture built
+Reusable UI components structured
+Responsive layout for all devices
+SEO-friendly structure
+⚙️Phase 2 - Production Upgrade
+Navigation system made fully functional
+Authentication flow structure added (Login / Register)
+Routing between pages implemented
+Dashboard architecture prepared for users
+Cloud backend preparation enabled via Lovable Cloud
+🧠 Key Features
+📖Learning Platform Structure
+Courses catalog (Mathematics, Physics, Programming, etc.)
+Individual course detail pages
+Subject-based navigation system
+👤 User System (UI Ready)
+Login page
+Registration page
+Dashboard layout (ready for personalization)
+🎨 Modern UI/UX
+Clean academic design style
+Deep navy + teal color system
+Responsive layouts (mobile / tablet / desktop)
+Reusable components (Navbar, Footer, Cards, Sections)
+⚡ Production-Ready Architecture
+Scalable page structure
+Component-based design system
+SEO optimization
+Routing system for multi-page navigation
+🏗️ Pages Included
+Home (landing page with hero, stats, CTA)
+Courses Catalog
+Course Detail Page
+Pricing (3 tiers)
+About Page
+Dashboard
+Login
+Register
+🧱 Tech Stack
+Frontend: React / Next.js (Lovable-generated architecture)
+Styling: Modern component-based CSS system (Tailwind-style design system)
+Routing: Multi-page SPA structure
+Backend readiness: Lovable Cloud integration enabled
+Deployment: Lovable hosting
+📦 Architecture Highlights
+Modular reusable components
+Scalable folder structure
+Clean separation of pages and UI components
+Production-ready navigation system
+Authentication-ready flow (UI + routing)
+🚀 Live Project
 
-**Use your preferred IDE**
+👉 https://studyfy-app.lovable.app/
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+🔮 Future Enhancements
+Real authentication system (users, sessions)
+Database for courses and progress tracking
+Payment system for premium courses
+AI-powered learning recommendations
+Instructor/admin dashboard
+Course video streaming integration
+👨‍💻 Author
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Built by Rasul Kazumovi
 
-Follow these steps:
+Portfolio: https://buildwithrasul.com
+(to be connected)
+Projects: Studyfy, Gemutly, and more
+📄 License
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+This project is part of a personal portfolio and learning system.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+⭐ Summary
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Studyfy is a scalable foundation for a full online education platform, built with modern UI principles and production architecture in mind.
